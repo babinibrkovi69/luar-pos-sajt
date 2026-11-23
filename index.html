@@ -29,6 +29,7 @@ img,svg{display:block}
 
 /* nebo */
 #nebo{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+@media (hover:none){#nebo{bottom:auto;height:100lvh}body::before,#glow{display:none}.pz-cap{filter:none!important}.nav{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}}
 body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1200px 700px at 70% -10%,rgba(91,75,214,.22),transparent 60%),radial-gradient(900px 600px at 0% 100%,rgba(40,60,160,.18),transparent 60%)}
 .mesec{position:absolute;right:max(-140px,calc(50% - 780px));top:60px;width:min(380px,50vw);aspect-ratio:1;pointer-events:none;z-index:0;will-change:transform}
 .mesec .k{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 38% 36%,#f4fbff,#c9dcf2 50%,#8aa2c9 100%);box-shadow:0 0 120px 30px rgba(134,220,255,.18),0 0 300px 80px rgba(134,220,255,.08);
@@ -1121,6 +1122,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;
       <div class="cr"><div>Cena</div><div><svg class="y"><use href="#i-chk"/></svg>Javna, sve na sajtu</div><div><svg class="n"><use href="#i-x"/></svg>„Pozovite za ponudu“</div></div>
       <div class="cr"><div>Konobar na telefonu</div><div><svg class="y"><use href="#i-chk"/></svg>U ceni, svaki telefon</div><div><svg class="n"><use href="#i-x"/></svg>Doplata po uređaju</div></div>
       <div class="cr"><div>Način rada</div><div><svg class="y"><use href="#i-chk"/></svg>Krojimo po vašem lokalu</div><div><svg class="n"><use href="#i-x"/></svg>Isti šablon za sve</div></div>
+      <div class="cr"><div>Nestanak struje</div><div><svg class="y"><use href="#i-chk"/></svg>Ništa se ne gubi, ni otvoreni stolovi</div><div><svg class="n"><use href="#i-x"/></svg>Često se gubi poslednji unos</div></div>
       <div class="cr"><div>Instalacija i obuka</div><div><svg class="y"><use href="#i-chk"/></svg>U ceni</div><div><svg class="n"><use href="#i-x"/></svg>Naplaćuje se posebno</div></div>
       <div class="cr"><div>Nove funkcije</div><div><svg class="y"><use href="#i-chk"/></svg>Stižu same, u ceni</div><div><svg class="n"><use href="#i-x"/></svg>Novi modul, nova doplata</div></div>
       <div class="cr"><div>Podrška</div><div><svg class="y"><use href="#i-chk"/></svg>Do zatvaranja lokala</div><div><svg class="n"><use href="#i-x"/></svg>Radnim danima do 17h</div></div>
@@ -1230,6 +1232,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;
     <h2 class="h2 rv">Šta nas najčešće pitaju.</h2>
     <div class="faq" id="faq">
       <div class="fq"><button>Da li radi bez interneta?<i><svg><use href="#i-plus"/></svg></i></button><div class="a"><div><p>Da. Sve se čuva u lokalu, a u Nebo se pošalje kad se veza vrati.</p></div></div></div>
+      <div class="fq"><button>Šta ako nestane struje?<i><svg><use href="#i-plus"/></svg></i></button><div class="a"><div><p>Ništa se ne gubi. Svaki klik se odmah upisuje na disk, pa posle paljenja stolovi i računi čekaju tamo gde su bili. Kasa uz to sama pravi rezervnu kopiju na svakih 30 minuta.</p></div></div></div>
       <div class="fq"><button>Na kakvom računaru radi?<i><svg><use href="#i-plus"/></svg></i></button><div class="a"><div><p>Na običnom Windows računaru. Nemate? Uzmite LUAR Komplet.</p></div></div></div>
       <div class="fq"><button>Šta je sa fiskalizacijom?<i><svg><use href="#i-plus"/></svg></i></button><div class="a"><div><p>Recite nam šta koristite, pa vam kažemo kako ga povezujemo.</p></div></div></div>
       <div class="fq"><button>Koliko traje prilagođavanje mom načinu rada?<i><svg><use href="#i-plus"/></svg></i></button><div class="a"><div><p>Naš način: 48 sati. Po vašem: do nedelju dana.</p></div></div></div>
@@ -1312,9 +1315,9 @@ if($("#mq"))$("#mq").innerHTML=half+half;
 
 /* zvezdano nebo */
 (function(){
-  const c=document.getElementById("nebo"),x=c.getContext("2d");let W,H,S=[],dpr=Math.min(2,devicePixelRatio||1);
-  function size(){W=c.width=innerWidth*dpr;H=c.height=innerHeight*dpr;S=Array.from({length:Math.round(innerWidth*innerHeight/5200)},()=>({x:Math.random()*W,y:Math.random()*H*1.6,r:(Math.random()**3*1.6+.3)*dpr,d:Math.random()*.6+.15,t:Math.random()*6.28,s:Math.random()*.02+.005}))}
-  size();addEventListener("resize",size);
+  const c=document.getElementById("nebo"),x=c.getContext("2d");const dodir=matchMedia("(hover: none)").matches;let W,H,S=[],sirina=0,dpr=Math.min(dodir?1.5:2,devicePixelRatio||1);
+  function size(){const vis=dodir?Math.max(innerHeight,screen.height||0):innerHeight;W=c.width=innerWidth*dpr;H=c.height=vis*dpr;S=Array.from({length:Math.round(innerWidth*innerHeight/5200)},()=>({x:Math.random()*W,y:Math.random()*H*1.6,r:(Math.random()**3*1.6+.3)*dpr,d:Math.random()*.6+.15,t:Math.random()*6.28,s:Math.random()*.02+.005}))}
+  size();sirina=innerWidth;addEventListener("resize",()=>{if(dodir&&innerWidth===sirina)return;sirina=innerWidth;size()});
   let shoot=null;
   const still=matchMedia("(prefers-reduced-motion:reduce)").matches;
   function f(){
@@ -1437,11 +1440,12 @@ $("#forma").addEventListener("submit",e=>{
   const tab = document.getElementById('pz-tab'), tel = document.getElementById('pz-tel'), tabLice = document.getElementById('pz-tab-lice');
   const tabOds = document.getElementById('pz-tab-ods'), telOds = document.getElementById('pz-tel-ods');
   const tiho = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dodir = matchMedia('(hover: none)').matches;  // telefon/tablet: lakša scena
   const hero = document.getElementById('pz-hero'), mesec = document.getElementById('pz-mesec');
   document.querySelectorAll('#h1 .w').forEach((w, i) => (w.style.animationDelay = (.15 + i * .08) + 's'));
 
   // čestice u dubini (paralaksa od kretanja "kamere")
-  for (let i = 0; i < 46; i++) {
+  for (let i = 0; i < (dodir ? 14 : 46); i++) {
     const d = document.createElement('i'), s = 3 + Math.random() * 7, z = -1600 + Math.random() * 1500;
     d.className = Math.random() < .35 ? '' : 'b';
     d.style.cssText = `left:${-20 + Math.random() * 140}%;top:${-20 + Math.random() * 140}%;width:${s}px;height:${s}px;opacity:${(.25 + Math.random() * .55).toFixed(2)};transform:translateZ(${z.toFixed(0)}px)`;
@@ -1473,6 +1477,8 @@ $("#forma").addEventListener("submit",e=>{
 
   let W, H, mob, sT, sP, cx, cy, cx0, cxS;
   function velicina() {
+    // na telefonu adresna traka menja visinu dok se skroluje: tada NE računamo scenu iznova (inače skače)
+    if (dodir && W === innerWidth && H) return;
     W = innerWidth; H = innerHeight; mob = W < 860;
     sT = mob ? (W * 0.9) / 960 : Math.min((W * 0.5) / 960, (H * 0.6) / 600);
     sP = mob ? Math.min((H * 0.46) / 810, (W * 0.5) / 390) : (H * 0.66) / 810;
@@ -1521,7 +1527,7 @@ $("#forma").addEventListener("submit",e=>{
     pretapanje(eT, p); pretapanje(eP, p);
     // zaron: meko zamućenje samo na ekranu (vektor ostaje oštar čim kamera izađe)
     const zr = Math.max(0, 1 - Math.min(Math.abs(p - .23), Math.abs(p - .53)) / .05);
-    tabLice.style.filter = zr > .02 ? `blur(${(zr * zr * 5).toFixed(1)}px) brightness(${(1 + zr * .15).toFixed(2)})` : '';
+    tabLice.style.filter = !dodir && zr > .02 ? `blur(${(zr * zr * 5).toFixed(1)}px) brightness(${(1 + zr * .15).toFixed(2)})` : '';
     tab.style.opacity = p > .84 ? Math.max(.45, 1 - (p - .84) * 3.5).toFixed(3) : '1';
     tabOds.style.setProperty('--sx', `${(60 - s.t[4] * 2.2 - mx * 10).toFixed(1)}%`);
     telOds.style.setProperty('--sx', `${(60 - ((s.f[4] % 360) + 360) % 360 * .05 - mx * 10).toFixed(1)}%`);
